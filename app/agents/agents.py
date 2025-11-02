@@ -1,7 +1,9 @@
 import google.generativeai as genai
-from langchain_core.messages import HumanMessage, AIMessage
 import os
 from dotenv import load_dotenv
+
+load_dotenv()
+APIKEY = os.getenv("API-KEY")
 
 # BaseMessage: the abstract class (common structure for all messages)
 # HumanMessage: represents a user's input message
@@ -14,7 +16,7 @@ class SalesAgent:
         Gemini 1.5 Flash is fast, capable, and has a free tier.
         """
         # Initialize Gemini client
-        genai.configure(api_key="API-KEY")
+        genai.configure(api_key="APIKEY")
         self.model = genai.GenerativeModel("gemini-2.0-flash")
 
     def respond(self, query):
@@ -60,7 +62,7 @@ class TechAgent:
         Initializes the SalesAgent using Google's Gemini model.
         """
         # Initialize Gemini client
-        genai.configure(api_key="API-KEY")
+        genai.configure(api_key="APIKEY")
         self.model = genai.GenerativeModel("gemini-2.0-flash")
 
     def respond(self, query):
