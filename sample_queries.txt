@@ -1,0 +1,61 @@
+💼 Sales Queries (Handled by Sales Agent)
+
+Pricing & Plans:
+- What are your pricing plans?
+- Do you offer any student discounts?
+- Is there a free trial available?
+- How much does the premium plan cost?
+- Can I switch plans anytime?
+
+Features & Benefits:
+- What are the main features of your product?
+- Does your app support mobile devices?
+- What’s included in the enterprise package?
+- How is your service different from competitors?
+- Can I customize the dashboard view?
+
+Payment & Subscription:
+- What payment methods do you accept?
+- How can I cancel my subscription?
+- Do you charge any setup fees?
+- Will I get an invoice for every payment?
+- Can I upgrade my plan mid-cycle?
+
+Company / Offers:
+- Where is your company based?
+- Do you provide 24/7 customer support?
+- Are there any current promotions or offers?
+- How can I contact your sales team?
+
+
+🛠️ Tech Queries (Handled by Tech Expert)
+
+Login / Account Issues:	
+- I can’t log into my account.
+- Why am I getting an “invalid credentials” error?
+- My password reset link isn’t working.
+- How do I enable two-factor authentication?
+
+API / Integration:
+- How do I integrate your API with FastAPI?
+- I’m getting a 401 unauthorized error from the API.
+- Does your system support OAuth2 authentication?
+- How can I get my API key?
+
+Performance & Bugs:
+- The app is running very slow.
+- I found a bug in the analytics page.
+- My dashboard is not loading data properly.
+- The chatbot keeps crashing on long inputs.
+
+Installation / Setup:
+- How do I install the SDK on Windows?
+- I’m getting a “module not found” error.
+- What Python version is supported?
+- How can I configure environment variables?
+
+Data & Security:
+- How is my data stored?
+- Is my data encrypted?
+- Can I export my chat logs?
+- What’s your backup policy?

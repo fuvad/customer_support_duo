@@ -5,27 +5,56 @@ from typing import TypedDict, Optional
 # Define the state schema
 class SupportState(TypedDict):
     query: str
+    context: Optional[str]  
     response: Optional[str]
     next_agent: Optional[str]
+    agent: Optional[str]  # who handled the reply: "sales" or "tech"
 
 sales = SalesAgent()
 tech = TechAgent()
 
-def sales_node(state):
-    reply = sales.respond(state["query"])
-    state["response"] = reply
+def sales_node(state: SupportState):
+    """
+    Sales node:
+    - Calls SalesAgent.respond(query, context)
+    - If SalesAgent returns the transfer tag, set next_agent="tech", agent=None (or "sales" if you want an explicit tag)
+    - Otherwise set next_agent="end" and agent="sales"
+    """
+    query = state["query"]
+    context = state.get("context", None)
 
-    # Detect if we need to escalate to tech
+    reply = sales.respond(query, context)
+    # Default values
+    state["response"] = None
+    state["agent"] = None
+    state["next_agent"] = "end"
+
     if "[ACTION: TRANSFER_TO_TECH]" in reply:
-        state["next_agent"] = "tech"
+        # Sales detected a technical issue — handover to tech.
+        state["next_agent"] = "tech_agent"
+        state["response"] = (
+            "That sounds like a technical issue. Connecting you to a Tech Expert..."
+        )
+        state["agent"] = "sales_agent"
     else:
+        state["response"] = reply
+        state["agent"] = "sales_agent"
         state["next_agent"] = "end"
 
     return state
 
-def tech_node(state):
-    reply = tech.respond(state["query"])
+def tech_node(state: SupportState):
+    """
+    Tech node:
+    - Calls TechAgent.respond(query, context) and returns final response.
+    - Tech always ends.
+    """
+    query = state["query"]
+    context = state.get("context", None)
+
+    reply = tech.respond(query, context)
     state["response"] = reply
+    state["agent"] = "tech_agent"
     state["next_agent"] = "end"
     return state
 
@@ -40,9 +69,9 @@ graph.add_edge(START, "sales")
 # Add conditional logic for branching
 graph.add_conditional_edges(
     "sales",
-    lambda state: state["next_agent"],  # decide next step dynamically
+    lambda st: st["next_agent"],  # decide next step dynamically
     {
-        "tech": "tech",
+        "tech_agent": "tech",
         "end": END
     }
 )

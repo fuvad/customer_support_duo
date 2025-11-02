@@ -1,25 +1,24 @@
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+from typing import Optional
 
-load_dotenv()
-APIKEY = os.getenv("API-KEY")
-
-# BaseMessage: the abstract class (common structure for all messages)
-# HumanMessage: represents a user's input message
-# AIMessage: represents a message from the AI model.
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
+APIKEY = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=APIKEY)
 
 class SalesAgent:
-    def __init__(self):
-        """
-        Initializes the SalesAgent using Google's Gemini model.
-        Gemini 1.5 Flash is fast, capable, and has a free tier.
-        """
-        # Initialize Gemini client
-        genai.configure(api_key="APIKEY")
-        self.model = genai.GenerativeModel("gemini-2.0-flash")
+    """
+    SalesAgent:
+    - respond(query, context) -> for sales questions returns conversational text
+    - for technical questions returns exactly the tag: "[ACTION: TRANSFER_TO_TECH]"
+    """
 
-    def respond(self, query):
+    def __init__(self, model_name: str = "gemini-2.0-flash"):
+        # Initialize Gemini client
+        self.model = genai.GenerativeModel(model_name)
+
+    def respond(self, query: str, context: Optional[str] = None):
         """
         Generates a response and includes an action tag for the orchestrator.
         """
@@ -50,26 +49,26 @@ class SalesAgent:
         * Do not use any other format for the action tag.
         * Do not mention the internal action tag or the transfer process to the user.
         """
-        response = self.model.generate_content(system_prompt +"\n"+ query)
+        if context:
+            response = self.model.generate_content(system_prompt +"\n"+ query + "\n" + context)
+        else:
+            response = self.model.generate_content(system_prompt +"\n"+ query)
 
         return response.text
     
 
 
 class TechAgent:
-    def __init__(self):
-        """
-        Initializes the SalesAgent using Google's Gemini model.
-        """
-        # Initialize Gemini client
-        genai.configure(api_key="APIKEY")
-        self.model = genai.GenerativeModel("gemini-2.0-flash")
+    """
+    TechAgent: given the query and context, returns a helpful technical reply (full text).
+    """
+    def __init__(self, model_name: str = "gemini-2.0-flash"):
+        self.model = genai.GenerativeModel(model_name)
 
-    def respond(self, query):
+    def respond(self, query: str, context: Optional[str] = None):
         """
         Generates a technical support response using the previous chat history for context.
         """
-
         system_prompt = """
         You are an elite Technical Support Expert. You were just handed this conversation by the Sales Agent.
 
@@ -78,6 +77,9 @@ class TechAgent:
         3. Provide clear, step-by-step troubleshooting or explain the solution professionally.
         """
 
-        response = self.model.generate_content(system_prompt +"\n"+ query)
+        if context:
+            response = self.model.generate_content(system_prompt +"\n"+ query + "\n" + context)
+        else:
+            response = self.model.generate_content(system_prompt +"\n"+ query)
 
         return response.text
