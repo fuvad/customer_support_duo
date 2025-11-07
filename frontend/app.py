@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-BACKEND_URL = "http://127.0.0.1:8080/ask" 
+BACKEND_URL = "https://customer-support-duo-759834991483.us-central1.run.app/ask" 
 
 st.set_page_config(page_title="Jio Support Assistant", page_icon="📱", layout="centered")
 

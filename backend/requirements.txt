@@ -1,6 +1,6 @@
-langchain
 google.generativeai
 fastapi
 uvicorn
 streamlit
 dotenv
+langgraph
